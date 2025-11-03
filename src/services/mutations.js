@@ -1,132 +1,174 @@
 import { gql } from '@apollo/client';
 
-// AUTH MUTATIONS
-export const LOGIN = gql `
-mutation Login($email: String!, $password: String!) {
- login(email: $email,password: $password) {
- token
- user{
- id
- email
- firstName
- lastName
-}
-}
-}
+// ============ AUTH MUTATIONS ============
+export const LOGIN = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user {
+        id
+        username
+        email
+        role
+      }
+    }
+  }
 `;
 
-export const REGISTER = gql `
-mustation Register($input:registerInput !) {
- register(input:$input!) {
- token
- user{
- id
- email
- firstName
- lastName
+export const REGISTER = gql`
+  mutation Register($username: String!, $email: String!, $password: String!) {
+    register(username: $username, email: $email, password: $password) {
+      token
+      user {
+        id
+        username
+        email
+        role
+      }
+    }
   }
-}
-}
 `;
-export const UPDATE_PROFILE = gql`
-  mutation UpdateProfile($input: ProfileInput!) {
-    updateProfile(input: $input) {
+
+// ============ PROFIL MUTATIONS ============
+export const CREATE_PROFIL = gql`
+  mutation CreateProfil($input: ProfilInput!) {
+    createProfil(input: $input) {
       id
-      firstName
-      lastName
-      email
-      title
+      nom
+      prenom
+      titre
       bio
-      avatar
-      phone
-      location
-      github
-      linkedin
-      twitter
-      website
+      email
+      telephone
+      photo
+      cv
+      reseauxSociaux {
+        linkedin
+        github
+        twitter
+        website
+      }
+      adresse {
+        ville
+        pays
+      }
     }
   }
 `;
 
-export const CREATE_PROJECT = gql`
-  mutation CreateProject($input: ProjectInput!) {
-    createProject(input: $input) {
+export const UPDATE_PROFIL = gql`
+  mutation UpdateProfil($id: ID!, $input: ProfilInput!) {
+    updateProfil(id: $id, input: $input) {
       id
-      title
+      nom
+      prenom
+      titre
+      bio
+      email
+      telephone
+      photo
+      cv
+      reseauxSociaux {
+        linkedin
+        github
+        twitter
+        website
+      }
+      adresse {
+        ville
+        pays
+      }
+    }
+  }
+`;
+
+export const DELETE_PROFIL = gql`
+  mutation DeleteProfil($id: ID!) {
+    deleteProfil(id: $id)
+  }
+`;
+
+// ============ PROJECT MUTATIONS ============
+export const CREATE_PROJET = gql`
+  mutation CreateProjet($input: ProjetInput!) {
+    createProjet(input: $input) {
+      id
+      titre
       description
-      shortDescription
-      image
+      descriptionLongue
+      technologies {
+        id
+        nom
+      }
       images
-      technologies
-      githubUrl
-      liveUrl
-      featured
-      order
+      lienGithub
+      lienDemo
+      statut
+      dateDebut
+      dateFin
+      ordre
     }
   }
 `;
 
-
-export const UPDATE_PROJECT = gql`
-  mutation UpdateProject($id: ID!, $input: ProjectInput!) {
-    updateProject(id: $id, input: $input) {
+export const UPDATE_PROJET = gql`
+  mutation UpdateProjet($id: ID!, $input: ProjetInput!) {
+    updateProjet(id: $id, input: $input) {
       id
-      title
+      titre
       description
-      shortDescription
-      image
+      descriptionLongue
+      technologies {
+        id
+        nom
+      }
       images
-      technologies
-      githubUrl
-      liveUrl
-      featured
-      order
+      lienGithub
+      lienDemo
+      statut
+      dateDebut
+      dateFin
+      ordre
     }
   }
 `;
 
-export const DELETE_PROJECT = gql`
-  mutation DeleteProject($id: ID!) {
-    deleteProject(id: $id) {
+export const DELETE_PROJET = gql`
+  mutation DeleteProjet($id: ID!) {
+    deleteProjet(id: $id)
+  }
+`;
+
+// ============ COMPETENCE MUTATIONS ============
+export const CREATE_COMPETENCE = gql`
+  mutation CreateCompetence($input: CompetenceInput!) {
+    createCompetence(input: $input) {
       id
-      title
+      nom
+      niveau
+      categorie
+      pourcentage
+      icone
     }
   }
 `;
 
-
-export const CREATE_SKILL = gql`
-  mutation CreateSkill($input: SkillInput!) {
-    createSkill(input: $input) {
+export const UPDATE_COMPETENCE = gql`
+  mutation UpdateCompetence($id: ID!, $input: CompetenceInput!) {
+    updateCompetence(id: $id, input: $input) {
       id
-      name
-      category
-      level
-      icon
-      order
+      nom
+      niveau
+      categorie
+      pourcentage
+      icone
     }
   }
 `;
 
-export const UPDATE_SKILL = gql`
-  mutation UpdateSkill($id: ID!, $input: SkillInput!) {
-    updateSkill(id: $id, input: $input) {
-      id
-      name
-      category
-      level
-      icon
-      order
-    }
-  }
-`;
-
-export const DELETE_SKILL = gql`
-  mutation DeleteSkill($id: ID!) {
-    deleteSkill(id: $id) {
-      id
-      name
-    }
+export const DELETE_COMPETENCE = gql`
+  mutation DeleteCompetence($id: ID!) {
+    deleteCompetence(id: $id)
   }
 `;
 
@@ -135,15 +177,20 @@ export const CREATE_EXPERIENCE = gql`
   mutation CreateExperience($input: ExperienceInput!) {
     createExperience(input: $input) {
       id
-      company
-      position
+      entreprise
+      poste
+      type
       description
-      startDate
-      endDate
-      current
-      location
-      technologies
-      order
+      competences {
+        id
+        nom
+      }
+      dateDebut
+      dateFin
+      enCours
+      lieu
+      logo
+      ordre
     }
   }
 `;
@@ -152,24 +199,26 @@ export const UPDATE_EXPERIENCE = gql`
   mutation UpdateExperience($id: ID!, $input: ExperienceInput!) {
     updateExperience(id: $id, input: $input) {
       id
-      company
-      position
+      entreprise
+      poste
+      type
       description
-      startDate
-      endDate
-      current
-      location
-      technologies
-      order
+      competences {
+        id
+        nom
+      }
+      dateDebut
+      dateFin
+      enCours
+      lieu
+      logo
+      ordre
     }
   }
 `;
 
 export const DELETE_EXPERIENCE = gql`
   mutation DeleteExperience($id: ID!) {
-    deleteExperience(id: $id) {
-      id
-      company
-    }
+    deleteExperience(id: $id)
   }
 `;

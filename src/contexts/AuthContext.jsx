@@ -1,14 +1,11 @@
-import { createContext,useState,useEffect, use }  from "react";
-
-import {useMutation } from "@apollo/client";
+import { createContext, useState, useEffect } from "react";
+import { useMutation } from "@apollo/client";
 import { LOGIN } from '@/services/mutations';
 import { jwtDecode } from 'jwt-decode';
-import { ca } from "zod/v4/locales";
-import { jwt } from "zod";
 
 export const AuthContext = createContext();
 
-export const authProvider = ({children}) => {
+export const AuthProvider = ({children}) => {
 
   const[ user,setUser]= useState (null);
   const [loading,setLoading]= useState (true);
@@ -51,8 +48,9 @@ const login =async (email,password) =>{
 
   }catch (error){
     console.error("Login error:", error);
-    return {success:false,
-      message:error.message || 'Erreur de connexion',
+    return {
+      success:false,
+      error:error.message || 'Erreur de connexion',
     };
   }
 };
